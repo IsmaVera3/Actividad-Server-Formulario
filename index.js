@@ -48,6 +48,48 @@ app.post("/", (req, res) => {
     libros.save();
     console.log(libros);
 });
+
+app.post("/", (req, res) => {
+    const nameC = req.body.nameC;
+    const autorC = req.body.autorC;
+    const editorialC = req.body.editorialC;
+    const isdnC = req.body.isdnC;
+    const generoC = req.body.generoC;
+    const paginasC = req.body.paginasC;
+    const precioC = req.body.precioC;
+    const añoC = req.body.añoC;
+    
+    const librosCargados = new mongoose.Schema({
+        nameC: nameC,
+        autorC: autorC,
+        editorialC: editorialC,
+        isdnC: isdnC,
+        generoC: generoC,
+        paginasC: paginasC,
+        precioC: precioC,
+        añoC: añoC,
+    });
+    
+    const Ejemplo = mongoose.model("Ejemplo", librosCargados);
+    
+    
+        librosCargados.save();
+        console.log(librosCargados);
+});
+
+// Ruta para obtener los datos
+app.get("/views/ver-libros", (req, res) => {
+    librosCargados.find({}, (err, datos) => {
+        if (err) {
+            console.error("Error al obtener los datos:", err);
+            res.status(500).json({ error: "Error al obtener los datos" });
+        } else {
+            res.json(datos);
+        }
+    });
+});
+librosCargados.save();
+cosole.log(librosCargados);
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
