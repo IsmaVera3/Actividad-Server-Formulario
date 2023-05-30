@@ -2,10 +2,11 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const Libros = require("./libros");
+const path = require("path");
 const port = 3000;
 
 mongoose.connect(
-    "mongodb+srv://isma:ismapiratavera...@cluster0.zcaiqkt.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://isma:ismapiratavera...@cluster0.zcaiqkt.mongodb.net/?retryWrites=true&w=majority", //In@K@lp@K@
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -17,11 +18,19 @@ const { name } = require("ejs");
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
-app.use(express.static("public"));
+app.use(express.static(path.join( __dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
     res.render("mi-vista");
+});
+
+app.get("/verLibros", (req, res) => {
+    res.render("verLibros");
+});
+
+app.get("/vista2", (req, res) => {
+    res.render("vista2");
 });
 
 app.post("/", (req, res) => {
@@ -49,47 +58,17 @@ app.post("/", (req, res) => {
     console.log(libros);
 });
 
-app.post("/", (req, res) => {
-    const nameC = req.body.nameC;
-    const autorC = req.body.autorC;
-    const editorialC = req.body.editorialC;
-    const isdnC = req.body.isdnC;
-    const generoC = req.body.generoC;
-    const paginasC = req.body.paginasC;
-    const precioC = req.body.precioC;
-    const añoC = req.body.añoC;
-    
-    const librosCargados = new mongoose.Schema({
-        nameC: nameC,
-        autorC: autorC,
-        editorialC: editorialC,
-        isdnC: isdnC,
-        generoC: generoC,
-        paginasC: paginasC,
-        precioC: precioC,
-        añoC: añoC,
-    });
-    
-    const Ejemplo = mongoose.model("Ejemplo", librosCargados);
-    
-    
-        librosCargados.save();
-        console.log(librosCargados);
+const Libro = mongoose.model("Libro", {
+    name: String,
+    autor: String,
+    editorial: String,
+    isdn: Number,
+    genero: String,
+    paginas: Number,
+    precio: Number,
+    año: String,
 });
 
-// Ruta para obtener los datos
-app.get("/views/ver-libros", (req, res) => {
-    librosCargados.find({}, (err, datos) => {
-        if (err) {
-            console.error("Error al obtener los datos:", err);
-            res.status(500).json({ error: "Error al obtener los datos" });
-        } else {
-            res.json(datos);
-        }
-    });
-});
-librosCargados.save();
-cosole.log(librosCargados);
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
